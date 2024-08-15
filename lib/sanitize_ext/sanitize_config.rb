@@ -89,10 +89,10 @@ class Sanitize
       annotation = semantics.children.find(&is_annotation_with_encoding.curry['application/x-tex'])
       if annotation
         text = if math.attributes['display']&.value == 'block'
-          "$$#{annotation.text}$$"
-        else
-          "$#{annotation.text}$"
-        end
+                 "$$#{annotation.text}$$"
+               else
+                 "$#{annotation.text}$"
+               end
         math.replace(Nokogiri::XML::Text.new(text, math.document))
         return
       end
