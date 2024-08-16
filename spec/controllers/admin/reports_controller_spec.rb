@@ -24,6 +24,15 @@ describe Admin::ReportsController do
       expect(response).to have_http_status(200)
     end
 
+    # As we're changing how the report search field works, we need to ensure we
+    # don't break anyone's existing searches:
+    it 'redirects if by_target_domain is used' do
+      get :index, params: { by_target_domain: 'social.example' }
+
+      expect(response)
+        .to redirect_to admin_reports_path({ search_type: 'target', search_term: 'social.example' })
+    end
+
     it 'returns http success with resolved filter' do
       specified = Fabricate(:report, action_taken_at: Time.now.utc)
       Fabricate(:report, action_taken_at: nil)

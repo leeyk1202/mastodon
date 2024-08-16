@@ -6,6 +6,17 @@ module Admin
 
     def index
       authorize :report, :index?
+
+      # We previously only supported searching by target account domain for
+      # reports, we now have more search options, but it's important that we
+      # don't break any saved queries people may have:
+      if params.include? :by_target_domain
+        redirect_to admin_reports_path({
+          search_type: 'target',
+          search_term: params[:by_target_domain],
+        })
+      end
+
       @reports = filtered_reports.page(params[:page])
     end
 
