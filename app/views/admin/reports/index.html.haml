@@ -19,13 +19,12 @@
   .fields-group
     = form.hidden_field :resolved, value: params[:resolved] if params[:resolved].present?
 
-    .input.string.optional
+    .input.string.optional.input--with-select
+      = form.select :search_type, options_for_select([[I18n.t('admin.reports.search_type_target'), 'target'], [I18n.t('admin.reports.search_type_source'), 'source']], params[:search_type] || 'target')
       = form.text_field :search_term,
                         value: params[:search_term],
                         class: 'string optional',
                         placeholder: I18n.t('admin.reports.search_term')
-
-    = form.collection_radio_buttons :search_type, [['target', I18n.t('admin.reports.search_type_target')], ['source', I18n.t('admin.reports.search_type_source')]], :first, :last, { checked: params[:search_type] || 'target', include_hidden: false }
 
     .actions
       %button.button= t('admin.accounts.search')

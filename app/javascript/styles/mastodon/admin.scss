@@ -1909,6 +1909,11 @@ a.sparkline {
   }
 }
 
-input#search_type_source {
-  margin-left: 15px;
+select#search_type {
+  width: 33ch;
+}
+
+.input--with-select {
+  display: flex;
+  gap: 15px;
 }
