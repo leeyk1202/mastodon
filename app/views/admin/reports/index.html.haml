@@ -76,9 +76,14 @@
                 = t('admin.reports.forwarded_to', domain: target_account.domain)
 
           .report-card__summary__item__assigned
+            - if report.action_taken?
+              = t('admin.reports.resolved')
+            - else
+              = t('admin.reports.unresolved')
+            %br
             - if report.assigned_account.present?
               = admin_account_link_to report.assigned_account
             - else
-              \-
+              = t('admin.reports.not_assigned')
 
 = paginate @reports
