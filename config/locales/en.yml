@@ -609,7 +609,6 @@ en:
       are_you_sure: Are you sure?
       assign_to_self: Assign to me
       assigned: Assigned moderator
-      by_target_domain: Domain of reported account
       cancel: Cancel
       category: Category
       category_description_html: The reason this account and/or content was reported will be cited in communication with the reported account
