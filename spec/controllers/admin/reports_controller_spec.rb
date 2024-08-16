@@ -53,6 +53,22 @@ describe Admin::ReportsController do
       expect(response).to have_http_status(200)
     end
 
+    it 'returns http success with target_account_id filter' do
+      targeted_account = Fabricate(:account)
+      not_targeted_account = Fabricate(:account)
+
+      targeted = Fabricate(:report, action_taken_at: nil, target_account: targeted_account)
+      Fabricate(:report, action_taken_at: nil, target_account: not_targeted_account)
+
+      get :index, params: { target_account_id: targeted_account.id }
+
+      reports = assigns(:reports).to_a
+      expect(reports.size).to eq 1
+      expect(reports[0]).to eq targeted
+
+      expect(response).to have_http_status(200)
+    end
+
     describe 'outdated filters' do
       # As we're changing how the report search field works, we need to ensure we
       # don't break anyone's existing searches:
