@@ -12,11 +12,20 @@ describe Admin::ReportsController do
   end
 
   describe 'GET #index' do
-    it 'returns http success with no filters' do
+    # This isn't the primary entrypoint anymore, as navigation links with the
+    # status=unresolved filter applied.
+    it 'redirects if no filters are supplied' do
+      get :index
+
+      expect(response)
+        .to redirect_to admin_reports_path({ status: 'unresolved' })
+    end
+
+    it 'returns http success with status filter of unresolved' do
       specified = Fabricate(:report, action_taken_at: nil)
       Fabricate(:report, action_taken_at: Time.now.utc)
 
-      get :index
+      get :index, params: { status: 'unresolved' }
 
       reports = assigns(:reports).to_a
       expect(reports.size).to eq 1
@@ -76,7 +85,7 @@ describe Admin::ReportsController do
         get :index, params: { by_target_domain: 'social.example' }
 
         expect(response)
-          .to redirect_to admin_reports_path({ search_type: 'target', search_term: 'social.example' })
+          .to redirect_to admin_reports_path({ search_type: 'target', search_term: 'social.example', status: 'unresolved' })
       end
 
       it 'redirects if resolved is used' do
