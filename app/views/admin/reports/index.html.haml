@@ -5,9 +5,9 @@
   .filter-subset
     %strong= t('admin.reports.status')
     %ul
-      %li= filter_link_to t('admin.reports.all'), resolved: '-1'
-      %li= filter_link_to t('admin.reports.unresolved'), resolved: nil
-      %li= filter_link_to t('admin.reports.resolved'), resolved: '1'
+      %li= filter_link_to t('admin.reports.all'), status: 'all'
+      %li= filter_link_to t('admin.reports.unresolved'), status: nil
+      %li= filter_link_to t('admin.reports.resolved'), status: 'resolved'
   .filter-subset
     %strong= t('admin.reports.target_origin')
     %ul
