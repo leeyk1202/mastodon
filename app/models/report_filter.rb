@@ -2,15 +2,19 @@
 
 class ReportFilter
   KEYS = %i(
-    resolved
-    account_id
-    target_account_id
+    status
     search_type
     search_term
+    account_id
+    target_account_id
     target_origin
   ).freeze
 
-  IGNORED_PARAMS = %i(resolved search_type search_term).freeze
+  FILTER_PARAMS = %i(
+    account_id
+    target_account_id
+    target_origin
+  ).freeze
 
   attr_reader :params
 
@@ -19,28 +23,40 @@ class ReportFilter
   end
 
   def results
-    scope = if params[:resolved] == '-1'
-              Report.unscoped
-            elsif params[:resolved] == '1'
-              Report.resolved
-            else
-              Report.unresolved
-            end
+    scope = initial_scope
 
+    # If we're searching, then no other filters can be applied, as the other
+    # filters conflict with the search filter:
+    return scope.merge search_scope if searching?
+
+    # Otherwise, apply the other filters
     params.each do |key, value|
-      next if IGNORED_PARAMS.include? key.to_sym
+      next unless FILTER_PARAMS.include? key.to_sym
 
       new_scope = scope_for(key, value)
       scope = scope.merge new_scope if new_scope
     end
 
-    scope = scope.merge search_scope if searching?
     scope
   end
 
-  def search_filter
+  def initial_scope
+    case params[:status]
+    when 'resolved'
+      Report.resolved
+    when 'all'
+      Report.unscoped
+    else
+      # catches both no status and 'unresolved'
+      Report.unresolved
+    end
+  end
+
+  def account_search_filter
     if params[:search_term].starts_with? '@'
-      username_parts = params[:search_term].delete_prefix('@').split('@')
+      raise Mastodon::InvalidParameterError, "Invalid username for search: #{params[:search_term]}" unless AccountSearchService::MENTION_ONLY_RE.match?(params[:search_term])
+
+      username_parts = params[:search_term].delete_prefix('@').split('@', 2)
       Account.where(username: username_parts[0], domain: username_parts[1])
     else
       Account.where(domain: params[:search_term])
@@ -50,9 +66,9 @@ class ReportFilter
   def search_scope
     case params[:search_type].to_sym
     when :target
-      Report.where(target_account: search_filter)
+      Report.where(target_account: account_search_filter)
     when :source
-      Report.where(account: search_filter)
+      Report.where(account: account_search_filter)
     else
       raise Mastodon::InvalidParameterError, "Unknown search type: #{params[:search_type]}"
     end
@@ -65,7 +81,7 @@ class ReportFilter
     when :target_account_id
       Report.where(target_account_id: value)
     when :target_origin
-      target_origin_scope(value) unless searching?
+      target_origin_scope(value)
     else
       raise Mastodon::InvalidParameterError, "Unknown filter: #{key}"
     end
@@ -78,7 +94,7 @@ class ReportFilter
     when :remote
       Report.where(target_account: Account.remote)
     else
-      raise Mastodon::InvalidParameterError, "Unknown value: #{value}"
+      raise Mastodon::InvalidParameterError, "Unknown origin value: #{value}"
     end
   end
 

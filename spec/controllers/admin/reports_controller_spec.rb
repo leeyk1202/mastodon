@@ -24,26 +24,61 @@ describe Admin::ReportsController do
       expect(response).to have_http_status(200)
     end
 
-    # As we're changing how the report search field works, we need to ensure we
-    # don't break anyone's existing searches:
-    it 'redirects if by_target_domain is used' do
-      get :index, params: { by_target_domain: 'social.example' }
-
-      expect(response)
-        .to redirect_to admin_reports_path({ search_type: 'target', search_term: 'social.example' })
-    end
-
-    it 'returns http success with resolved filter' do
+    it 'returns http success with status filter of resolved' do
       specified = Fabricate(:report, action_taken_at: Time.now.utc)
       Fabricate(:report, action_taken_at: nil)
 
-      get :index, params: { resolved: '1' }
+      get :index, params: { status: 'resolved' }
 
       reports = assigns(:reports).to_a
       expect(reports.size).to eq 1
       expect(reports[0]).to eq specified
 
       expect(response).to have_http_status(200)
+    end
+
+    it 'returns http success with status filter of all' do
+      resolved = Fabricate(:report, action_taken_at: Time.now.utc)
+      unresolved = Fabricate(:report, action_taken_at: nil)
+
+      get :index, params: { status: 'all' }
+
+      reports = assigns(:reports).to_a
+      expect(reports.size).to eq 2
+
+      # unresolved is the most recently created report, so it's first:
+      expect(reports[0]).to eq unresolved
+      expect(reports[1]).to eq resolved
+
+      expect(response).to have_http_status(200)
+    end
+
+    describe 'outdated filters' do
+      # As we're changing how the report search field works, we need to ensure we
+      # don't break anyone's existing searches:
+      it 'redirects if by_target_domain is used' do
+        get :index, params: { by_target_domain: 'social.example' }
+
+        expect(response)
+          .to redirect_to admin_reports_path({ search_type: 'target', search_term: 'social.example' })
+      end
+
+      it 'redirects if resolved is used' do
+        get :index, params: { resolved: '1' }
+
+        expect(response)
+          .to redirect_to admin_reports_path({ search_type: 'target', search_term: nil, status: 'resolved' })
+      end
+
+      it 'redirects if resolved and by_target_domain are used' do
+        get :index, params: { resolved: '1', by_target_domain: 'social.example' }
+
+        expect(response).to redirect_to admin_reports_path({
+          search_type: 'target',
+          search_term: 'social.example',
+          status: 'resolved',
+        })
+      end
     end
   end
 
