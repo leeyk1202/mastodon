@@ -6,7 +6,7 @@
     %strong= t('admin.reports.status')
     %ul
       %li= filter_link_to t('admin.reports.all'), status: 'all'
-      %li= filter_link_to t('admin.reports.unresolved'), status: nil
+      %li= filter_link_to t('admin.reports.unresolved'), status: 'unresolved'
       %li= filter_link_to t('admin.reports.resolved'), status: 'resolved'
   .filter-subset
     %strong= t('admin.reports.target_origin')
@@ -17,7 +17,7 @@
 
 = form_with url: admin_reports_url, method: :get, class: :simple_form do |form|
   .fields-group
-    = form.hidden_field :resolved, value: params[:resolved] if params[:resolved].present?
+    = form.hidden_field :status, value: 'all'
 
     .input.string.optional.input--with-select
       = form.select :search_type, options_for_select([[I18n.t('admin.reports.search_type_target'), 'target'], [I18n.t('admin.reports.search_type_source'), 'source']], params[:search_type] || 'target')
