@@ -587,6 +587,7 @@ en:
       created_msg: Report note successfully created!
       destroyed_msg: Report note successfully deleted!
     reports:
+      all: 'all'
       account:
         notes:
           one: "%{count} note"

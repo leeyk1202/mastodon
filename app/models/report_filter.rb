@@ -10,6 +10,11 @@ class ReportFilter
     target_origin
   ).freeze
 
+  DIRECT_KEYS = %i(
+    account_id
+    target_account_id
+  ).freeze
+
   FILTER_PARAMS = %i(
     account_id
     target_account_id

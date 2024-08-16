@@ -7,14 +7,20 @@ module Admin
     def index
       authorize :report, :index?
 
-      # If there are no parameters, redirect to include the status parameter,
-      # this ensures the "status" option menu always shows a highlighted option.
-      return redirect_to admin_reports_path({ status: 'unresolved' }) if filter_params.empty? && !outdated_filter?
-
       # We previously only supported searching by target account domain for
       # reports, we now have more search options, but it's important that we
       # don't break any saved queries people may have:
       return redirect_to_new_filter if outdated_filter?
+
+      # If there isn't a status filter parameter, redirect to include the status parameter as unresolved,
+      # this ensures the "status" option menu always shows a highlighted option.
+      if filter_params.exclude? :status
+        if params.slice(*ReportFilter::DIRECT_KEYS).present?
+          return redirect_to admin_reports_path(filter_params.merge({ status: 'all' }))
+        else
+          return redirect_to admin_reports_path(filter_params.merge({ status: 'unresolved' }))
+        end
+      end
 
       @reports = filtered_reports.page(params[:page])
     end
