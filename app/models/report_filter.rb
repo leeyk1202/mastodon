@@ -28,6 +28,8 @@ class ReportFilter
   end
 
   def results
+    raise Mastodon::InvalidParameterError, "Unknown parameter(s): #{unknown_params.join(', ')}" if unknown_params.any?
+
     scope = initial_scope
 
     # If we're searching, then no other filters can be applied, as the other
@@ -105,5 +107,9 @@ class ReportFilter
 
   def searching?
     params[:search_term].present? && params[:search_type].present?
+  end
+
+  def unknown_params
+    params.keys.reject { |param| ReportFilter::KEYS.include? param.to_sym }
   end
 end
