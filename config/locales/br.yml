@@ -225,7 +225,6 @@ br:
       status: Statud
       title: Disklêriadennoù
       unresolved: Andiskoulmet
-      updated_at: Nevesaet
     roles:
       categories:
         devops: DevOps

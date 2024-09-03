@@ -573,7 +573,6 @@ eo:
       are_you_sure: Ĉu vi certas?
       assign_to_self: Asigni al mi
       assigned: Asignita kontrolanto
-      by_target_domain: Domajno de la signalita konto
       cancel: Nuligi
       category: Kategorio
       category_description_html: La kialo pri ĉi tiuj konto kaj enhavo raportitaj sendotas al la raportita konto
@@ -599,11 +598,8 @@ eo:
         title: Notoj
       notes_description_html: Vidi kaj lasi notojn por aliaj kontrolantoj kaj estonta vi
       processed_msg: 'La raporto #%{id} sukcese prilaborita'
-      quick_actions_description_html: 'Agu au movu malsupre por vidi raportitajn enhavojn:'
       remote_user_placeholder: la ekstera uzanto de %{instance}
-      reopen: Remalfermi signalon
       report: 'Signalo #%{id}'
-      reported_account: Signalita konto
       reported_by: Signalita de
       resolved: Solvitaj
       resolved_msg: Signalo sukcese solvita!
@@ -633,7 +629,6 @@ eo:
       unassign: Malasigni
       unknown_action_msg: 'Nekonata ago: %{action}'
       unresolved: Nesolvitaj
-      updated_at: Ĝisdatigita
       view_profile: Vidi profilon
     roles:
       add_new: Aldoni rolon
