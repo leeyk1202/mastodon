@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'Link' do
+RSpec.describe 'Link' do
   let(:user)    { Fabricate(:user) }
   let(:scopes)  { 'read:statuses' }
   let(:token)   { Fabricate(:accessible_access_token, resource_owner_id: user.id, scopes: scopes) }
@@ -13,7 +13,7 @@ describe 'Link' do
       subject
 
       expect(response).to have_http_status(200)
-      expect(body_as_json.pluck(:id)).to match_array(expected_statuses.map { |status| status.id.to_s })
+      expect(response.parsed_body.pluck(:id)).to match_array(expected_statuses.map { |status| status.id.to_s })
     end
   end
 
@@ -40,6 +40,8 @@ describe 'Link' do
         end
       end
     end
+
+    it_behaves_like 'forbidden for wrong scope', 'profile'
 
     context 'when there is no preview card' do
       let(:preview_card) { nil }
@@ -80,13 +82,25 @@ describe 'Link' do
         Form::AdminSettings.new(timeline_preview: false).save
       end
 
-      context 'when the user is not authenticated' do
+      it_behaves_like 'forbidden for wrong scope', 'profile'
+
+      context 'without an authentication token' do
         let(:headers) { {} }
 
-        it 'returns http unauthorized' do
+        it 'returns http unprocessable entity' do
           subject
 
-          expect(response).to have_http_status(401)
+          expect(response).to have_http_status(422)
+        end
+      end
+
+      context 'with an application access token, not bound to a user' do
+        let(:token) { Fabricate(:accessible_access_token, resource_owner_id: nil, scopes: scopes) }
+
+        it 'returns http unprocessable entity' do
+          subject
+
+          expect(response).to have_http_status(422)
         end
       end
 
@@ -113,7 +127,7 @@ describe 'Link' do
           subject
 
           expect(response).to have_http_status(200)
-          expect(body_as_json.size).to eq(params[:limit])
+          expect(response.parsed_body.size).to eq(params[:limit])
         end
 
         it 'sets the correct pagination headers', :aggregate_failures do

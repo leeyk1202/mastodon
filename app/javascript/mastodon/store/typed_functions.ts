@@ -1,8 +1,7 @@
+import type { GetThunkAPI } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useDispatch, useSelector } from 'react-redux';
-
-import type { BaseThunkAPI } from '@reduxjs/toolkit/dist/createAsyncThunk';
 
 import type { AppDispatch, RootState } from './store';
 
@@ -16,7 +15,7 @@ export interface AsyncThunkRejectValue {
 }
 
 interface AppMeta {
-  skipLoading?: boolean;
+  useLoadingBar?: boolean;
 }
 
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
@@ -25,29 +24,20 @@ export const createAppAsyncThunk = createAsyncThunk.withTypes<{
   rejectValue: AsyncThunkRejectValue;
 }>();
 
-type AppThunkApi = Pick<
-  BaseThunkAPI<
-    RootState,
-    unknown,
-    AppDispatch,
-    AsyncThunkRejectValue,
-    AppMeta,
-    AppMeta
-  >,
-  'getState' | 'dispatch'
->;
-
-interface AppThunkOptions {
-  skipLoading?: boolean;
-}
-
-const createBaseAsyncThunk = createAsyncThunk.withTypes<{
+interface AppThunkConfig {
   state: RootState;
   dispatch: AppDispatch;
   rejectValue: AsyncThunkRejectValue;
   fulfilledMeta: AppMeta;
   rejectedMeta: AppMeta;
-}>();
+}
+type AppThunkApi = Pick<GetThunkAPI<AppThunkConfig>, 'getState' | 'dispatch'>;
+
+interface AppThunkOptions {
+  useLoadingBar?: boolean;
+}
+
+const createBaseAsyncThunk = createAsyncThunk.withTypes<AppThunkConfig>();
 
 export function createThunk<Arg = void, Returned = void>(
   name: string,
@@ -64,15 +54,20 @@ export function createThunk<Arg = void, Returned = void>(
         const result = await creator(arg, { dispatch, getState });
 
         return fulfillWithValue(result, {
-          skipLoading: options.skipLoading,
+          useLoadingBar: options.useLoadingBar,
         });
       } catch (error) {
-        return rejectWithValue({ error }, { skipLoading: true });
+        return rejectWithValue(
+          { error },
+          {
+            useLoadingBar: options.useLoadingBar,
+          },
+        );
       }
     },
     {
       getPendingMeta() {
-        if (options.skipLoading) return { skipLoading: true };
+        if (options.useLoadingBar) return { useLoadingBar: true };
         return {};
       },
     },
@@ -158,7 +153,7 @@ export function createDataLoadingThunk<
  *   You can also omit this parameter and pass `thunkOptions` directly
  * @param maybeThunkOptions
  *   Additional Mastodon specific options for the thunk. Currently supports:
- *   - `skipLoading` to avoid showing the loading bar when the request is in progress
+ *   - `useLoadingBar` to display a loading bar while this action is pending. Defaults to true.
  * @returns The created thunk
  */
 export function createDataLoadingThunk<
@@ -208,6 +203,6 @@ export function createDataLoadingThunk<
         return undefined as Returned;
       else return result;
     },
-    thunkOptions,
+    { useLoadingBar: thunkOptions?.useLoadingBar ?? true },
   );
 }

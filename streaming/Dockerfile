@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.8
+# syntax=docker/dockerfile:1.9
 
 # Please see https://docs.docker.com/engine/reference/builder for information about
 # the extended buildx capabilities used in this file.
@@ -110,4 +110,4 @@ USER mastodon
 # Expose default Streaming ports
 EXPOSE 4000
 # Run streaming when started
-CMD [ node ./streaming/index.js ]
+CMD [ "node", "./streaming/index.js" ]
