@@ -1,7 +1,5 @@
 // @ts-check
 
-import { selectUseGroupedNotifications } from 'mastodon/selectors/settings';
-
 import { getLocale } from '../locales';
 import { connectStream } from '../stream';
 
@@ -13,7 +11,7 @@ import {
 } from './announcements';
 import { updateConversations } from './conversations';
 import { processNewNotificationForGroups, refreshStaleNotificationGroups, pollRecentNotifications as pollRecentGroupNotifications } from './notification_groups';
-import { updateNotifications, expandNotifications } from './notifications';
+import { updateNotifications } from './notifications';
 import { updateStatus } from './statuses';
 import {
   updateTimeline,
@@ -39,7 +37,7 @@ const randomUpTo = max =>
  * @param {string} channelName
  * @param {Object.<string, string>} params
  * @param {Object} options
- * @param {function(Function, Function): Promise<void>} [options.fallback]
+ * @param {function(Function): Promise<void>} [options.fallback]
  * @param {function(): void} [options.fillGaps]
  * @param {function(object): boolean} [options.accept]
  * @returns {function(): void}
@@ -54,11 +52,11 @@ export const connectTimelineStream = (timelineId, channelName, params = {}, opti
     let pollingId;
 
     /**
-     * @param {function(Function, Function): Promise<void>} fallback
+     * @param {function(Function): Promise<void>} fallback
      */
 
     const useFallback = async fallback => {
-      await fallback(dispatch, getState);
+      await fallback(dispatch);
       // eslint-disable-next-line react-hooks/rules-of-hooks -- this is not a react hook
       pollingId = setTimeout(() => useFallback(fallback), 20000 + randomUpTo(20000));
     };
@@ -103,20 +101,13 @@ export const connectTimelineStream = (timelineId, channelName, params = {}, opti
         case 'notification': {
           // @ts-expect-error
           const notificationJSON = JSON.parse(data.payload);
-          dispatch(updateNotifications(notificationJSON, messages, locale));
           // TODO: remove this once the groups feature replaces the previous one
-          if(selectUseGroupedNotifications(getState())) {
-            dispatch(processNewNotificationForGroups(notificationJSON));
-          }
+          dispatch(updateNotifications(notificationJSON, messages, locale));
+          dispatch(processNewNotificationForGroups(notificationJSON));
           break;
         }
         case 'notifications_merged':
-          const state = getState();
-          if (state.notifications.top || !state.notifications.mounted)
-            dispatch(expandNotifications({ forceLoad: true, maxId: undefined }));
-          if (selectUseGroupedNotifications(state)) {
-            dispatch(refreshStaleNotificationGroups());
-          }
+          dispatch(refreshStaleNotificationGroups());
           break;
         case 'conversation':
           // @ts-expect-error
@@ -141,21 +132,14 @@ export const connectTimelineStream = (timelineId, channelName, params = {}, opti
 
 /**
  * @param {Function} dispatch
- * @param {Function} getState
  */
-async function refreshHomeTimelineAndNotification(dispatch, getState) {
+async function refreshHomeTimelineAndNotification(dispatch) {
   await dispatch(expandHomeTimeline({ maxId: undefined }));
 
-  // TODO: remove this once the groups feature replaces the previous one
-  if(selectUseGroupedNotifications(getState())) {
-    // TODO: polling for merged notifications
-    try {
-      await dispatch(pollRecentGroupNotifications());
-    } catch (error) {
-      // TODO
-    }
-  } else {
-    await dispatch(expandNotifications({}));
+  try {
+    await dispatch(pollRecentGroupNotifications());
+  } catch (error) {
+    // TODO
   }
 
   await dispatch(fetchAnnouncements());

@@ -1,23 +1,12 @@
 import { Map as ImmutableMap, List as ImmutableList, fromJS } from 'immutable';
 
 import { blockAccountSuccess, muteAccountSuccess } from 'mastodon/actions/accounts';
+import { fetchNotificationRequests, expandNotificationRequests, fetchNotificationRequest, fetchNotificationsForRequest } from 'mastodon/actions/notification_requests';
 import {
-  NOTIFICATION_REQUESTS_EXPAND_REQUEST,
-  NOTIFICATION_REQUESTS_EXPAND_SUCCESS,
-  NOTIFICATION_REQUESTS_EXPAND_FAIL,
-  NOTIFICATION_REQUESTS_FETCH_REQUEST,
-  NOTIFICATION_REQUESTS_FETCH_SUCCESS,
-  NOTIFICATION_REQUESTS_FETCH_FAIL,
-  NOTIFICATION_REQUEST_FETCH_REQUEST,
-  NOTIFICATION_REQUEST_FETCH_SUCCESS,
-  NOTIFICATION_REQUEST_FETCH_FAIL,
   NOTIFICATION_REQUEST_ACCEPT_REQUEST,
   NOTIFICATION_REQUEST_DISMISS_REQUEST,
   NOTIFICATION_REQUESTS_ACCEPT_REQUEST,
   NOTIFICATION_REQUESTS_DISMISS_REQUEST,
-  NOTIFICATIONS_FOR_REQUEST_FETCH_REQUEST,
-  NOTIFICATIONS_FOR_REQUEST_FETCH_SUCCESS,
-  NOTIFICATIONS_FOR_REQUEST_FETCH_FAIL,
   NOTIFICATIONS_FOR_REQUEST_EXPAND_REQUEST,
   NOTIFICATIONS_FOR_REQUEST_EXPAND_SUCCESS,
   NOTIFICATIONS_FOR_REQUEST_EXPAND_FAIL,
@@ -64,23 +53,23 @@ const removeRequestByAccount = (state, account_id) => {
 
 export const notificationRequestsReducer = (state = initialState, action) => {
   switch(action.type) {
-  case NOTIFICATION_REQUESTS_FETCH_SUCCESS:
+  case fetchNotificationRequests.success.type:
     return state.withMutations(map => {
-      map.update('items', list => ImmutableList(action.requests.map(normalizeRequest)).concat(list));
+      map.update('items', list => ImmutableList(action.payload.requests.map(normalizeRequest)).concat(list));
       map.set('isLoading', false);
-      map.update('next', next => next ?? action.next);
+      map.update('next', next => next ?? action.payload.next);
     });
-  case NOTIFICATION_REQUESTS_EXPAND_SUCCESS:
+  case expandNotificationRequests.success.type:
     return state.withMutations(map => {
-      map.update('items', list => list.concat(ImmutableList(action.requests.map(normalizeRequest))));
+      map.update('items', list => list.concat(ImmutableList(action.payload.requests.map(normalizeRequest))));
       map.set('isLoading', false);
-      map.set('next', action.next);
+      map.set('next', action.payload.next);
     });
-  case NOTIFICATION_REQUESTS_EXPAND_REQUEST:
-  case NOTIFICATION_REQUESTS_FETCH_REQUEST:
+  case fetchNotificationRequests.pending.type:
+  case expandNotificationRequests.pending.type:
     return state.set('isLoading', true);
-  case NOTIFICATION_REQUESTS_EXPAND_FAIL:
-  case NOTIFICATION_REQUESTS_FETCH_FAIL:
+  case fetchNotificationRequests.failed.type:
+  case expandNotificationRequests.failed.type:
     return state.set('isLoading', false);
   case NOTIFICATION_REQUEST_ACCEPT_REQUEST:
   case NOTIFICATION_REQUEST_DISMISS_REQUEST:
@@ -92,20 +81,20 @@ export const notificationRequestsReducer = (state = initialState, action) => {
     return removeRequestByAccount(state, action.payload.relationship.id);
   case muteAccountSuccess.type:
     return action.payload.relationship.muting_notifications ? removeRequestByAccount(state, action.payload.relationship.id) : state;
-  case NOTIFICATION_REQUEST_FETCH_REQUEST:
+  case fetchNotificationRequest.pending.type:
     return state.set('current', initialState.get('current').set('isLoading', true));
-  case NOTIFICATION_REQUEST_FETCH_SUCCESS:
-    return state.update('current', map => map.set('isLoading', false).set('item', normalizeRequest(action.request)));
-  case NOTIFICATION_REQUEST_FETCH_FAIL:
+  case fetchNotificationRequest.fulfilled.type:
+    return state.update('current', map => map.set('isLoading', false).set('item', normalizeRequest(action.payload.request)));
+  case fetchNotificationRequest.failed.type:
     return state.update('current', map => map.set('isLoading', false));
-  case NOTIFICATIONS_FOR_REQUEST_FETCH_REQUEST:
+  case fetchNotificationsForRequest.pending.type:
   case NOTIFICATIONS_FOR_REQUEST_EXPAND_REQUEST:
     return state.setIn(['current', 'notifications', 'isLoading'], true);
-  case NOTIFICATIONS_FOR_REQUEST_FETCH_SUCCESS:
-    return state.updateIn(['current', 'notifications'], map => map.set('isLoading', false).update('items', list => ImmutableList(action.notifications.map(notificationToMap)).concat(list)).update('next', next => next ?? action.next));
+  case fetchNotificationsForRequest.fulfilled.type:
+    return state.updateIn(['current', 'notifications'], map => map.set('isLoading', false).update('items', list => ImmutableList(action.payload.notifications.map(notificationToMap)).concat(list)).update('next', next => next ?? action.payload.next));
   case NOTIFICATIONS_FOR_REQUEST_EXPAND_SUCCESS:
     return state.updateIn(['current', 'notifications'], map => map.set('isLoading', false).update('items', list => list.concat(ImmutableList(action.notifications.map(notificationToMap)))).set('next', action.next));
-  case NOTIFICATIONS_FOR_REQUEST_FETCH_FAIL:
+  case fetchNotificationsForRequest.failed.type:
   case NOTIFICATIONS_FOR_REQUEST_EXPAND_FAIL:
     return state.setIn(['current', 'notifications', 'isLoading'], false);
   default:
