@@ -7,7 +7,6 @@ fr:
     hosted_on: Serveur Mastodon hébergé sur %{domain}
     title: À propos
   accounts:
-    follow: Suivre
     followers:
       one: Abonné·e
       other: Abonné·e·s
@@ -25,6 +24,7 @@ fr:
   admin:
     account_actions:
       action: Effectuer l'action
+      already_suspended: Ce compte est déjà suspendu.
       title: Effectuer une action de modération sur %{acct}
     account_moderation_notes:
       create: Laisser une remarque
@@ -46,6 +46,7 @@ fr:
         title: Modifier l’adresse de courriel pour %{username}
       change_role:
         changed_msg: Rôle modifié avec succès !
+        edit_roles: Gérer les rôles d'utilisateur·ices
         label: Modifier le rôle
         no_role: Aucun rôle
         title: Modifier le rôle de %{username}
@@ -58,6 +59,7 @@ fr:
       demote: Rétrograder
       destroyed_msg: Les données de %{username} sont maintenant en file d’attente pour être supprimées imminemment
       disable: Geler
+      disable_sign_in_token_auth: Désactiver le jeton d'authentification par e-mail
       disable_two_factor_authentication: Désactiver l’authentification à deux facteurs
       disabled: Gelé
       display_name: Nom affiché
@@ -66,6 +68,7 @@ fr:
       email: Adresse de courriel
       email_status: État du courriel
       enable: Dégeler
+      enable_sign_in_token_auth: Activer le jeton d'authentification par e-mail
       enabled: Activé
       enabled_msg: Le compte de %{username} a été dégelé avec succès
       followers: Abonné·e·s
@@ -130,6 +133,7 @@ fr:
       resubscribe: Se réabonner
       role: Rôle
       search: Rechercher
+      search_same_email_domain: Autres utilisateurs avec le même domaine de courriel
       search_same_ip: Autres utilisateur·rice·s avec la même IP
       security: Sécurité
       security_measures:
@@ -185,9 +189,11 @@ fr:
         create_user_role: Créer le rôle
         demote_user: Rétrograder l’utilisateur·ice
         destroy_announcement: Supprimer l’annonce
+        destroy_canonical_email_block: Supprimer le blocage de courriel
         destroy_custom_emoji: Supprimer des émojis personnalisés
         destroy_domain_allow: Supprimer le domaine autorisé
         destroy_domain_block: Supprimer le blocage de domaine
+        destroy_email_domain_block: Supprimer le blocage de domaine de courriel
         destroy_instance: Purge du domaine
         destroy_ip_block: Supprimer la règle IP
         destroy_status: Supprimer le message
@@ -195,8 +201,10 @@ fr:
         destroy_user_role: Détruire le rôle
         disable_2fa_user: Désactiver l’A2F
         disable_custom_emoji: Désactiver les émojis personnalisés
+        disable_sign_in_token_auth_user: Désactiver le jeton d'authentification par e-mail pour l'utilisateur
         disable_user: Désactiver le compte
         enable_custom_emoji: Activer les émojis personnalisées
+        enable_sign_in_token_auth_user: Activer le jeton d'authentification par e-mail pour l'utilisateur
         enable_user: Activer le compte
         memorialize_account: Ériger en mémorial
         promote_user: Promouvoir le compte
@@ -219,26 +227,33 @@ fr:
         update_custom_emoji: Mettre à jour les émojis personnalisés
         update_domain_block: Mettre à jour le blocage de domaine
         update_ip_block: Mettre à jour la règle IP
+        update_report: Mettre à jour le rapport
         update_status: Mettre à jour le message
         update_user_role: Mettre à jour le rôle
       actions:
         approve_appeal_html: "%{name} a approuvé l'appel de la décision de modération émis par %{target}"
         approve_user_html: "%{name} a approuvé l’inscription de %{target}"
         assigned_to_self_report_html: "%{name} s’est assigné·e le signalement de %{target}"
+        change_email_user_html: "%{name} a changé l'adresse e-mail de l'utilisateur \n%{target}"
         change_role_user_html: "%{name} a changé le rôle de %{target}"
+        confirm_user_html: "%{name} a confirmé l'adresse e-mail de l'utilisateur %{target}"
         create_account_warning_html: "%{name} a envoyé un avertissement à %{target}"
         create_announcement_html: "%{name} a créé une nouvelle annonce %{target}"
+        create_canonical_email_block_html: "%{name} a bloqué l'adresse email avec le hachage %{target}"
         create_custom_emoji_html: "%{name} a téléversé un nouvel émoji %{target}"
         create_domain_allow_html: "%{name} a autorisé la fédération avec le domaine %{target}"
         create_domain_block_html: "%{name} a bloqué le domaine %{target}"
+        create_email_domain_block_html: "%{name} a bloqué le domaine d'e-mail %{target}"
         create_ip_block_html: "%{name} a créé une règle pour l'IP %{target}"
         create_unavailable_domain_html: "%{name} a arrêté la livraison vers le domaine %{target}"
         create_user_role_html: "%{name} a créé le rôle %{target}"
         demote_user_html: "%{name} a rétrogradé l'utilisateur·rice %{target}"
         destroy_announcement_html: "%{name} a supprimé l'annonce %{target}"
+        destroy_canonical_email_block_html: "%{name} a débloqué l'adresse email avec le hachage %{target}"
         destroy_custom_emoji_html: "%{name} a supprimé l'émoji %{target}"
         destroy_domain_allow_html: "%{name} a rejeté la fédération avec le domaine %{target}"
         destroy_domain_block_html: "%{name} a débloqué le domaine %{target}"
+        destroy_email_domain_block_html: "%{name} a débloqué le domaine d'e-mail %{target}"
         destroy_instance_html: "%{name} a purgé le domaine %{target}"
         destroy_ip_block_html: "%{name} a supprimé la règle pour l'IP %{target}"
         destroy_status_html: "%{name} a supprimé le message de %{target}"
@@ -276,6 +291,7 @@ fr:
       filter_by_action: Filtrer par action
       filter_by_user: Filtrer par utilisateur·ice
       title: Journal d’audit
+      unavailable_instance: "(nom de domaine indisponible)"
     announcements:
       destroyed_msg: Annonce supprimée avec succès !
       edit:
@@ -413,6 +429,7 @@ fr:
       attempts_over_week:
         one: "%{count} tentative au cours de la dernière semaine"
         other: "%{count} tentatives au cours de la dernière semaine"
+      created_msg: Domaine d'e-mail bloqué avec succès
       delete: Supprimer
       dns:
         types:
@@ -914,6 +931,10 @@ fr:
       statuses:
         allow: Autoriser le message
         allow_account: Autoriser l'auteur·rice
+        confirm_allow: Êtes-vous sûr de vouloir autoriser les statuts sélectionnés ?
+        confirm_allow_account: Êtes-vous sûr de vouloir autoriser les comptes sélectionnés ?
+        confirm_disallow: Êtes-vous sûr de vouloir rejeter les statuts sélectionnés ?
+        confirm_disallow_account: Êtes-vous sûr de vouloir rejeter les comptes sélectionnés ?
         description_html: Voici les messages dont votre serveur a connaissance qui sont beaucoup partagés et mis en favoris en ce moment. Cela peut aider vos utilisateur⋅rice⋅s, néophytes comme aguerri⋅e⋅s, à trouver plus de comptes à suivre. Aucun message n'est publiquement affiché tant que vous n'en avez pas approuvé l'auteur⋅rice, et seulement si icellui permet que son compte soit suggéré aux autres. Vous pouvez également autoriser ou rejeter les messages individuellement.
         disallow: Proscrire le message
         disallow_account: Proscrire l'auteur·rice
@@ -1126,6 +1147,12 @@ fr:
       view_strikes: Voir les sanctions précédemment appliquées à votre compte
     too_fast: Formulaire envoyé trop rapidement, veuillez réessayer.
     use_security_key: Utiliser la clé de sécurité
+  author_attribution:
+    example_title: Exemple de texte
+    hint_html: Déterminez la façon dont vous êtes crédité lorsque des liens sont partagés sur Mastodon.
+    more_from_html: Plus via %{name}
+    s_blog: Blog de %{name}
+    title: Attribution de l'auteur·e
   challenge:
     confirm: Continuer
     hint_html: "<strong>Astuce :</strong> Nous ne vous demanderons plus votre mot de passe pour la prochaine heure."
@@ -1200,8 +1227,6 @@ fr:
       your_appeal_approved: Votre appel a été approuvé
       your_appeal_pending: Vous avez soumis un appel
       your_appeal_rejected: Votre appel a été rejeté
-  domain_validator:
-    invalid_domain: n’est pas un nom de domaine valide
   edit_profile:
     basic_information: Informations de base
     hint_html: "<strong>Personnalisez ce que les gens voient sur votre profil public et à côté de vos messages.</strong> Les autres personnes seront plus susceptibles de vous suivre et d’interagir avec vous lorsque vous avez un profil complet et une photo."
@@ -1413,6 +1438,7 @@ fr:
   media_attachments:
     validations:
       images_and_video: Impossible de joindre une vidéo à un message contenant déjà des images
+      not_found: Média %{ids} introuvable ou déjà attaché à un autre message
       not_ready: Impossible de joindre les fichiers en cours de traitement. Réessayez dans un instant !
       too_many: Impossible de joindre plus de 4 fichiers
   migrations:
@@ -1690,23 +1716,12 @@ fr:
     edited_at_html: Modifié le %{date}
     errors:
       in_reply_not_found: Le message auquel vous essayez de répondre ne semble pas exister.
-    open_in_web: Ouvrir sur le web
     over_character_limit: limite de %{max} caractères dépassée
     pin_errors:
       direct: Les messages qui ne sont visibles que pour les utilisateur·rice·s mentionné·e·s ne peuvent pas être épinglés
       limit: Vous avez déjà épinglé le nombre maximum de messages
       ownership: Vous ne pouvez pas épingler un message ne vous appartenant pas
       reblog: Un partage ne peut pas être épinglé
-    poll:
-      total_people:
-        one: "%{count} personne"
-        other: "%{count} personnes"
-      total_votes:
-        one: "%{count} vote"
-        other: "%{count} votes"
-      vote: Voter
-    show_more: Déplier
-    show_thread: Afficher le fil de discussion
     title: "%{name} : « %{quote} »"
     visibilities:
       direct: Direct
@@ -1896,6 +1911,7 @@ fr:
     invalid_otp_token: Le code d’authentification à deux facteurs est invalide
     otp_lost_help_html: Si vous perdez accès aux deux, vous pouvez contacter %{email}
     rate_limited: Trop de tentatives d'authentification, réessayez plus tard.
+    seamless_external_login: Vous êtes connectés sur un service externe, de fait les paramètres de mot de passe et d'e-mail ne sont pas disponibles.
     signed_in_as: 'Connecté·e en tant que :'
   verification:
     extra_instructions_html: <strong>Astuce :</strong> Le lien sur votre site Web peut être invisible. La partie importante est <code>rel="me"</code> qui évite que soient pris en compte d’autres liens provenant de contenu générés par des utilisateurs tiers. Vous pouvez même utiliser une balise <code>link</code> dans l’en-tête de la page au lieu de <code>a</code>, mais le HTML doit être accessible sans avoir besoin d’exécuter du JavaScript.
@@ -1904,6 +1920,7 @@ fr:
     instructions_html: Copiez et collez le code ci-dessous dans le code HTML de votre site web. Ajoutez ensuite l’adresse de votre site dans l’un des champs supplémentaires de votre profil à partir de l‘onglet « Modifier le profil » et enregistrez les modifications.
     verification: Vérification
     verified_links: Vos liens vérifiés
+    website_verification: Vérification du site web
   webauthn_credentials:
     add: Ajouter une nouvelle clé de sécurité
     create:

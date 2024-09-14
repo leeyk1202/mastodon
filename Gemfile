@@ -111,7 +111,7 @@ group :opentelemetry do
   gem 'opentelemetry-instrumentation-http', '~> 0.23.2', require: false
   gem 'opentelemetry-instrumentation-http_client', '~> 0.22.3', require: false
   gem 'opentelemetry-instrumentation-net_http', '~> 0.22.4', require: false
-  gem 'opentelemetry-instrumentation-pg', '~> 0.28.0', require: false
+  gem 'opentelemetry-instrumentation-pg', '~> 0.29.0', require: false
   gem 'opentelemetry-instrumentation-rack', '~> 0.24.1', require: false
   gem 'opentelemetry-instrumentation-rails', '~> 0.31.0', require: false
   gem 'opentelemetry-instrumentation-redis', '~> 0.25.3', require: false
@@ -125,9 +125,6 @@ group :test do
 
   # Adds RSpec Error/Warning annotations to GitHub PRs on the Files tab
   gem 'rspec-github', '~> 2.4', require: false
-
-  # RSpec progress bar formatter
-  gem 'fuubar', '~> 2.5'
 
   # RSpec helpers for email specs
   gem 'email_spec'
@@ -149,10 +146,12 @@ group :test do
   gem 'rails-controller-testing', '~> 1.0'
 
   # Validate schemas in specs
-  gem 'json-schema', '~> 4.0'
+  gem 'json-schema', '~> 5.0'
 
   # Test harness fo rack components
   gem 'rack-test', '~> 2.1'
+
+  gem 'shoulda-matchers'
 
   # Coverage formatter for RSpec test if DISABLE_SIMPLECOV is false
   gem 'simplecov', '~> 0.22', require: false
@@ -210,7 +209,7 @@ group :development, :test do
   gem 'test-prof'
 
   # RSpec runner for rails
-  gem 'rspec-rails', '~> 6.0'
+  gem 'rspec-rails', '~> 7.0'
 end
 
 group :production do
