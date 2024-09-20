@@ -43,6 +43,7 @@ RSpec.describe 'Credentials' do
 
         expect(response.parsed_body[:client_id]).to_not be_present
         expect(response.parsed_body[:client_secret]).to_not be_present
+        expect(response.parsed_body[:client_secret_expires_at]).to_not be_present
       end
     end
 
