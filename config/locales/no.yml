@@ -20,7 +20,6 @@
     posts:
       one: Innlegg
       other: Innlegg
-    posts_tab_heading: Innlegg
   admin:
     account_actions:
       action: Utfør handling
@@ -1587,7 +1586,6 @@
     export: Dataeksport
     featured_tags: Utvalgte emneknagger
     import: Importér
-    import_and_export: Importer og eksporter
     migrate: Kontomigrering
     preferences: Innstillinger
     profile: Profil

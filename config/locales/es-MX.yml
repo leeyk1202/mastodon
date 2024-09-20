@@ -20,7 +20,6 @@ es-MX:
     posts:
       one: Toot
       other: Toots
-    posts_tab_heading: Toots
   admin:
     account_actions:
       action: Realizar acción
@@ -1695,7 +1694,6 @@ es-MX:
     export: Exportar información
     featured_tags: Hashtags destacados
     import: Importar
-    import_and_export: Importar y exportar
     migrate: Migración de cuenta
     notifications: Notificaciones por correo electrónico
     preferences: Preferencias

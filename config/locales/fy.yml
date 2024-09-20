@@ -20,7 +20,6 @@ fy:
     posts:
       one: Toot
       other: Berjochten
-    posts_tab_heading: Berjochten
   admin:
     account_actions:
       action: Aksje útfiere
@@ -1685,7 +1684,6 @@ fy:
     export: Eksportearje
     featured_tags: Utljochte hashtags
     import: Ymportearje
-    import_and_export: Ymportearje en eksportearje
     migrate: Accountmigraasje
     notifications: E-mailmeldingen
     preferences: Ynstellingen

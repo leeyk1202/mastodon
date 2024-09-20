@@ -20,7 +20,6 @@ pt-PT:
     posts:
       one: Publicação
       other: Publicações
-    posts_tab_heading: Publicações
   admin:
     account_actions:
       action: Executar acção
@@ -1682,7 +1681,6 @@ pt-PT:
     export: Exportar dados
     featured_tags: Etiquetas destacadas
     import: Importar
-    import_and_export: Importar e exportar
     migrate: Migração de conta
     preferences: Preferências
     profile: Perfil
