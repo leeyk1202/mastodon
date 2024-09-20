@@ -23,6 +23,8 @@ RSpec.describe 'API V1 Timelines List' do
         get "/api/v1/timelines/list/#{list.id}", headers: headers
 
         expect(response).to have_http_status(200)
+        expect(response.content_type)
+          .to start_with('application/json')
       end
     end
   end
@@ -36,6 +38,8 @@ RSpec.describe 'API V1 Timelines List' do
         get "/api/v1/timelines/list/#{list.id}", headers: headers
 
         expect(response).to have_http_status(404)
+        expect(response.content_type)
+          .to start_with('application/json')
       end
     end
   end
@@ -47,8 +51,9 @@ RSpec.describe 'API V1 Timelines List' do
       it 'returns http unprocessable entity' do
         get "/api/v1/timelines/list/#{list.id}", headers: headers
 
-        expect(response).to have_http_status(422)
-        expect(response.headers['Link']).to be_nil
+        expect(response)
+          .to have_http_status(422)
+          .and not_have_http_link_header
       end
     end
   end

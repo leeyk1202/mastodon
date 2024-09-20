@@ -32,7 +32,9 @@ RSpec.describe 'Featured Tags Suggestions API' do
 
       expect(response)
         .to have_http_status(200)
-      expect(body_as_json)
+      expect(response.content_type)
+        .to start_with('application/json')
+      expect(response.parsed_body)
         .to contain_exactly(
           include(name: used_tag.name)
         )

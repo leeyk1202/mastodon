@@ -17,8 +17,10 @@ RSpec.describe 'Credentials' do
         subject
 
         expect(response).to have_http_status(200)
+        expect(response.content_type)
+          .to start_with('application/json')
 
-        expect(body_as_json).to match(
+        expect(response.parsed_body).to match(
           a_hash_including(
             id: token.application.id.to_s,
             name: token.application.name,
@@ -36,10 +38,12 @@ RSpec.describe 'Credentials' do
         subject
 
         expect(response).to have_http_status(200)
+        expect(response.content_type)
+          .to start_with('application/json')
 
-        expect(body_as_json[:client_id]).to_not be_present
-        expect(body_as_json[:client_secret]).to_not be_present
-        expect(body_as_json[:client_secret_expires_at]).to_not be_present
+        expect(response.parsed_body[:client_id]).to_not be_present
+        expect(response.parsed_body[:client_secret]).to_not be_present
+        expect(response.parsed_body[:client_secret_expires_at]).to_not be_present
       end
     end
 
@@ -48,16 +52,14 @@ RSpec.describe 'Credentials' do
       let(:token)   { Fabricate(:accessible_access_token, application: application) }
       let(:headers) { { 'Authorization' => "Bearer #{token.token}" } }
 
-      it 'returns http success' do
+      it 'returns http success and returns app information' do
         subject
 
         expect(response).to have_http_status(200)
-      end
+        expect(response.content_type)
+          .to start_with('application/json')
 
-      it 'returns the app information correctly' do
-        subject
-
-        expect(body_as_json).to match(
+        expect(response.parsed_body).to match(
           a_hash_including(
             id: token.application.id.to_s,
             name: token.application.name,
@@ -79,6 +81,8 @@ RSpec.describe 'Credentials' do
         subject
 
         expect(response).to have_http_status(401)
+        expect(response.content_type)
+          .to start_with('application/json')
       end
     end
 
@@ -91,12 +95,14 @@ RSpec.describe 'Credentials' do
         subject
 
         expect(response).to have_http_status(401)
+        expect(response.content_type)
+          .to start_with('application/json')
       end
 
       it 'returns the error in the json response' do
         subject
 
-        expect(body_as_json).to match(
+        expect(response.parsed_body).to match(
           a_hash_including(
             error: 'The access token was revoked'
           )
@@ -109,16 +115,14 @@ RSpec.describe 'Credentials' do
       let(:token)   { Fabricate(:accessible_access_token, application: application) }
       let(:headers) { { 'Authorization' => "Bearer #{token.token}-invalid" } }
 
-      it 'returns http authorization error' do
+      it 'returns http authorization error with json error' do
         subject
 
         expect(response).to have_http_status(401)
-      end
+        expect(response.content_type)
+          .to start_with('application/json')
 
-      it 'returns the error in the json response' do
-        subject
-
-        expect(body_as_json).to match(
+        expect(response.parsed_body).to match(
           a_hash_including(
             error: 'The access token is invalid'
           )

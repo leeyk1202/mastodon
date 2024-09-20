@@ -19,7 +19,9 @@ RSpec.describe 'Tag' do
 
         expect(response)
           .to have_http_status(200)
-        expect(body_as_json.pluck(:id))
+        expect(response.content_type)
+          .to start_with('application/json')
+        expect(response.parsed_body.pluck(:id))
           .to match_array(expected_statuses.map { |status| status.id.to_s })
           .and not_include(private_status.id)
       end
@@ -70,7 +72,7 @@ RSpec.describe 'Tag' do
       it 'returns only the requested number of statuses' do
         subject
 
-        expect(body_as_json.size).to eq(params[:limit])
+        expect(response.parsed_body.size).to eq(params[:limit])
       end
 
       it 'sets the correct pagination headers', :aggregate_failures do
@@ -81,6 +83,8 @@ RSpec.describe 'Tag' do
             prev: api_v1_timelines_tag_url(limit: params[:limit], min_id: love_status.id),
             next: api_v1_timelines_tag_url(limit: params[:limit], max_id: love_status.id)
           )
+        expect(response.content_type)
+          .to start_with('application/json')
       end
     end
 
@@ -107,6 +111,8 @@ RSpec.describe 'Tag' do
           subject
 
           expect(response).to have_http_status(422)
+          expect(response.content_type)
+            .to start_with('application/json')
         end
       end
 

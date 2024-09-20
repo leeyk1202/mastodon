@@ -21,8 +21,10 @@ RSpec.describe 'Suggestions API' do
       get '/api/v2/suggestions', headers: headers
 
       expect(response).to have_http_status(200)
+      expect(response.content_type)
+        .to start_with('application/json')
 
-      expect(body_as_json).to match_array(
+      expect(response.parsed_body).to match_array(
         [bob, jeff].map do |account|
           hash_including({
             source: 'staff',
