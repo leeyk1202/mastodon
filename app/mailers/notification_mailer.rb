@@ -20,7 +20,7 @@ class NotificationMailer < ApplicationMailer
   def mention
     return unless @user.functional? && @status.present?
 
-    locale_for_account(@me) do
+    with_user_settings(@user) do
       mail subject: default_i18n_subject(name: @status.account.acct)
     end
   end
@@ -28,7 +28,7 @@ class NotificationMailer < ApplicationMailer
   def follow
     return unless @user.functional?
 
-    locale_for_account(@me) do
+    with_user_settings(@user) do
       mail subject: default_i18n_subject(name: @account.acct)
     end
   end
@@ -36,7 +36,7 @@ class NotificationMailer < ApplicationMailer
   def favourite
     return unless @user.functional? && @status.present?
 
-    locale_for_account(@me) do
+    with_user_settings(@user) do
       mail subject: default_i18n_subject(name: @account.acct)
     end
   end
@@ -44,7 +44,7 @@ class NotificationMailer < ApplicationMailer
   def reblog
     return unless @user.functional? && @status.present?
 
-    locale_for_account(@me) do
+    with_user_settings(@user) do
       mail subject: default_i18n_subject(name: @account.acct)
     end
   end
@@ -52,7 +52,7 @@ class NotificationMailer < ApplicationMailer
   def follow_request
     return unless @user.functional?
 
-    locale_for_account(@me) do
+    with_user_settings(@user) do
       mail subject: default_i18n_subject(name: @account.acct)
     end
   end
