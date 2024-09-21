@@ -432,8 +432,6 @@
   "keyboard_shortcuts.unfocus": "投稿の入力欄・検索欄から離れる",
   "keyboard_shortcuts.up": "カラム内一つ上に移動",
   "lightbox.close": "閉じる",
-  "lightbox.compress": "画像ビューボックスを閉じる",
-  "lightbox.expand": "画像ビューボックスを開く",
   "lightbox.next": "次",
   "lightbox.previous": "前",
   "limited_account_hint.action": "構わず表示する",
