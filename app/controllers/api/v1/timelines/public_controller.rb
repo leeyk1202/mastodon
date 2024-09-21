@@ -27,7 +27,7 @@ class Api::V1::Timelines::PublicController < Api::V1::Timelines::BaseController
       params[:max_id],
       params[:since_id],
       params[:min_id]
-    ).reject { |status| status.visibility == 'direct' } 
+    ).reject { |status| status.visibility == 'direct' }
   end
 
   def public_feed
