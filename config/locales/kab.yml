@@ -710,8 +710,8 @@ kab:
   privacy_policy:
     title: Tasertit tabaḍnit
   redirects:
-    prompt: Ma tumneḍ aseɣwen-a, sit fell-as akken ad tkemmleḍ.
-    title: Aql-ik·em ad teffɣeḍ seg %{instance}.
+    prompt: Ma tumneḍ asaɣ-a, sit fell-as akken ad tkemmleḍ.
+    title: Ad teffɣeḍ seg %{instance}.
   relationships:
     activity: Armud n umiḍan
     followers: Imeḍfaṛen
