@@ -34,7 +34,7 @@ class Api::V1::Timelines::HomeController < Api::V1::Timelines::BaseController
       params[:max_id],
       params[:since_id],
       params[:min_id]
-    )
+    ).reject { |status| status.visibility == 'direct' }
   end
 
   def account_home_feed
